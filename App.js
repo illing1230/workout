@@ -1,20 +1,16 @@
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { WorkoutProvider } from './src/context/WorkoutContext';
+import BottomTabNavigator from './src/navigation/BottomTabNavigator';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <WorkoutProvider>
+      <NavigationContainer>
+        <StatusBar style="light" />
+        <BottomTabNavigator />
+      </NavigationContainer>
+    </WorkoutProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
