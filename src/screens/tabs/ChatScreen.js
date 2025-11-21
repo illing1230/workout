@@ -49,7 +49,7 @@ const generateBotResponse = (userMessage, workoutContext) => {
   if (lowerMessage.includes('힘들') || lowerMessage.includes('포기') || lowerMessage.includes('어려')) {
     return {
       type: 'motivation',
-      text: '힘들 때가 성장하는 순간입니다! 💪 오늘 하루도 운동한 자신을 칭찬해주세요. 작은 진전도 큰 성과입니다. 파이팅!',
+      text: '운동해 이쉐키양',
       suggestions: ['동기부여 명언', '성공 사례', '목표 재설정'],
     };
   }
@@ -75,7 +75,7 @@ const generateBotResponse = (userMessage, workoutContext) => {
   // 기본 응답
   return {
     type: 'general',
-    text: '안녕하세요! 운동 관련 질문이 있으시면 편하게 물어보세요. 운동 추천, 식단, 루틴, 동기부여 등 다양한 주제로 도움드릴 수 있습니다! 😊',
+    text: '운동해 이쉐키양',
     suggestions: ['운동 추천받기', '내 통계 보기', '프로그램 추천', '식단 조언'],
   };
 };

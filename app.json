@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "health-app",
+    "name": "Health App",
     "slug": "health-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,18 +12,33 @@
       "resizeMode": "contain",
       "backgroundColor": "#0F1419"
     },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.healthapp.fitness"
     },
     "android": {
+      "package": "com.healthapp.fitness",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0F1419"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "your-project-id-here"
+      }
     }
   }
 }

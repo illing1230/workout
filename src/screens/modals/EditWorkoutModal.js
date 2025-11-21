@@ -187,7 +187,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     ...typography.h3,
-    color: colors.surface,
+    color: '#FFFFFF',
+    fontWeight: '700',
   },
   closeButton: {
     width: 36,
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     fontSize: 24,
-    color: colors.surface,
+    color: '#FFFFFF',
     fontWeight: '600',
   },
   modalBody: {
@@ -308,7 +309,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   updateButtonText: {
-    color: colors.surface,
+    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '700',
   },

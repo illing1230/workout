@@ -9,13 +9,15 @@ import {
 } from 'react-native';
 import { colors, spacing, borderRadius, shadows, typography } from '../../constants/theme';
 import LinearGradient from '../../components/LinearGradient';
+import { StarIcon, DumbbellIcon, FireIcon, YogaIcon, LightningIcon, CalendarIcon, TimerIcon } from '../../components/Icons';
 
 // 프로그램 데이터
 const PROGRAMS = [
   {
     id: '1',
     name: '초보자 프로그램',
-    icon: '🌱',
+    IconComponent: StarIcon,
+    iconColor: '#00E676',
     level: '초급',
     duration: '4주',
     daysPerWeek: 3,
@@ -30,7 +32,8 @@ const PROGRAMS = [
   {
     id: '2',
     name: '근력 강화 프로그램',
-    icon: '💪',
+    IconComponent: DumbbellIcon,
+    iconColor: '#3292FF',
     level: '중급',
     duration: '8주',
     daysPerWeek: 4,
@@ -46,7 +49,8 @@ const PROGRAMS = [
   {
     id: '3',
     name: '체지방 감량 프로그램',
-    icon: '🔥',
+    IconComponent: FireIcon,
+    iconColor: '#FF6B6B',
     level: '중급',
     duration: '6주',
     daysPerWeek: 5,
@@ -63,7 +67,8 @@ const PROGRAMS = [
   {
     id: '4',
     name: '유연성 향상 프로그램',
-    icon: '🧘',
+    IconComponent: YogaIcon,
+    iconColor: '#9C27B0',
     level: '초급',
     duration: '4주',
     daysPerWeek: 4,
@@ -79,7 +84,8 @@ const PROGRAMS = [
   {
     id: '5',
     name: '풀바디 챌린지',
-    icon: '⚡',
+    IconComponent: LightningIcon,
+    iconColor: '#FF3D00',
     level: '고급',
     duration: '12주',
     daysPerWeek: 6,
@@ -117,7 +123,7 @@ export default function ProgramScreen() {
       >
         <View style={styles.programHeader}>
           <View style={styles.programIconContainer}>
-            <Text style={styles.programIcon}>{item.icon}</Text>
+            <item.IconComponent size={40} color="#FFFFFF" />
           </View>
           <View style={[styles.levelBadge, { backgroundColor: 'rgba(255, 255, 255, 0.3)' }]}>
             <Text style={styles.levelText}>{item.level}</Text>
@@ -129,15 +135,15 @@ export default function ProgramScreen() {
 
         <View style={styles.programStats}>
           <View style={styles.programStat}>
-            <Text style={styles.programStatIcon}>📅</Text>
+            <CalendarIcon size={16} color="#FFFFFF" />
             <Text style={styles.programStatText}>{item.duration}</Text>
           </View>
           <View style={styles.programStat}>
-            <Text style={styles.programStatIcon}>🔄</Text>
+            <TimerIcon size={16} color="#FFFFFF" />
             <Text style={styles.programStatText}>주 {item.daysPerWeek}일</Text>
           </View>
           <View style={styles.programStat}>
-            <Text style={styles.programStatIcon}>💪</Text>
+            <DumbbellIcon size={16} color="#FFFFFF" />
             <Text style={styles.programStatText}>{item.workouts.length}가지 루틴</Text>
           </View>
         </View>
@@ -308,9 +314,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  programIcon: {
-    fontSize: 32,
-  },
   levelBadge: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
@@ -341,11 +344,9 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   programStat: {
+    flexDirection: 'row',
     alignItems: 'center',
-  },
-  programStatIcon: {
-    fontSize: 20,
-    marginBottom: spacing.xs,
+    gap: spacing.xs,
   },
   programStatText: {
     ...typography.caption,

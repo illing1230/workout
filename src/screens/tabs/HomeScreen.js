@@ -4,6 +4,7 @@ import { useWorkout } from '../../context/WorkoutContext';
 import AddWorkoutModal from '../modals/AddWorkoutModal';
 import LinearGradient from '../../components/LinearGradient';
 import { colors, gradients, spacing, borderRadius, shadows, typography } from '../../constants/theme';
+import { TargetIcon, TimerIcon, FireIcon, DumbbellIcon, PlusIcon } from '../../components/Icons';
 
 export default function HomeScreen({ navigation }) {
   const { getTodayStats, getWeekStats, goals, addWorkout } = useWorkout();
@@ -42,7 +43,9 @@ export default function HomeScreen({ navigation }) {
 
           <View style={styles.goalsGrid}>
             <View style={[styles.goalCard, { borderLeftColor: colors.primary }]}>
-              <Text style={styles.goalIcon}>🎯</Text>
+              <View style={styles.goalIconContainer}>
+                <TargetIcon size={28} color={colors.textSecondary} />
+              </View>
               <Text style={styles.goalNumber}>{todayStats.workoutCount}</Text>
               <Text style={styles.goalLabel}>운동 완료</Text>
               <View style={styles.progressBar}>
@@ -60,7 +63,9 @@ export default function HomeScreen({ navigation }) {
             </View>
 
             <View style={[styles.goalCard, { borderLeftColor: colors.secondary }]}>
-              <Text style={styles.goalIcon}>⏱️</Text>
+              <View style={styles.goalIconContainer}>
+                <TimerIcon size={28} color={colors.textSecondary} />
+              </View>
               <Text style={styles.goalNumber}>{todayStats.totalMinutes}</Text>
               <Text style={styles.goalLabel}>분</Text>
               <View style={styles.progressBar}>
@@ -78,7 +83,9 @@ export default function HomeScreen({ navigation }) {
             </View>
 
             <View style={[styles.goalCard, { borderLeftColor: colors.warning }]}>
-              <Text style={styles.goalIcon}>🔥</Text>
+              <View style={styles.goalIconContainer}>
+                <FireIcon size={28} color={colors.textSecondary} />
+              </View>
               <Text style={styles.goalNumber}>{todayStats.totalCalories}</Text>
               <Text style={styles.goalLabel}>칼로리</Text>
               <View style={styles.progressBar}>
@@ -111,7 +118,7 @@ export default function HomeScreen({ navigation }) {
                   <Text style={styles.quickStartSubtitle}>오늘의 운동을 기록하세요</Text>
                 </View>
                 <View style={styles.quickStartIcon}>
-                  <Text style={styles.quickStartIconText}>+</Text>
+                  <PlusIcon size={32} color="#FFFFFF" />
                 </View>
               </View>
             </LinearGradient>
@@ -125,7 +132,7 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.statsCard}>
             <View style={styles.statRow}>
               <View style={styles.statIconContainer}>
-                <Text style={styles.statEmoji}>💪</Text>
+                <DumbbellIcon size={24} color={colors.textSecondary} />
               </View>
               <View style={styles.statInfo}>
                 <Text style={styles.statLabel}>운동 횟수</Text>
@@ -135,7 +142,7 @@ export default function HomeScreen({ navigation }) {
 
             <View style={styles.statRow}>
               <View style={styles.statIconContainer}>
-                <Text style={styles.statEmoji}>⏰</Text>
+                <TimerIcon size={24} color={colors.textSecondary} />
               </View>
               <View style={styles.statInfo}>
                 <Text style={styles.statLabel}>총 운동 시간</Text>
@@ -145,7 +152,7 @@ export default function HomeScreen({ navigation }) {
 
             <View style={[styles.statRow, { borderBottomWidth: 0 }]}>
               <View style={styles.statIconContainer}>
-                <Text style={styles.statEmoji}>🔥</Text>
+                <FireIcon size={24} color={colors.textSecondary} />
               </View>
               <View style={styles.statInfo}>
                 <Text style={styles.statLabel}>소모 칼로리</Text>
@@ -204,29 +211,31 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   goalsGrid: {
+    flexDirection: 'row',
     gap: spacing.md,
   },
   goalCard: {
+    flex: 1,
     backgroundColor: colors.surface,
     borderRadius: borderRadius.lg,
-    padding: spacing.xl,
+    padding: spacing.lg,
     borderLeftWidth: 4,
     ...shadows.md,
   },
-  goalIcon: {
-    fontSize: 32,
-    marginBottom: spacing.sm,
+  goalIconContainer: {
+    marginBottom: spacing.xs,
+    alignItems: 'center',
   },
   goalNumber: {
-    fontSize: 36,
+    fontSize: 28,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   goalLabel: {
-    fontSize: 14,
+    fontSize: 12,
     color: colors.textSecondary,
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   progressBar: {
     height: 8,
@@ -274,11 +283,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  quickStartIconText: {
-    fontSize: 28,
-    fontWeight: '600',
-    color: colors.surface,
-  },
   statsCard: {
     backgroundColor: colors.surface,
     borderRadius: borderRadius.lg,
@@ -300,9 +304,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: spacing.md,
-  },
-  statEmoji: {
-    fontSize: 24,
   },
   statInfo: {
     flex: 1,

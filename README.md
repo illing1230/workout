@@ -16,6 +16,8 @@
 - [화면 설명](#화면-설명)
 - [색상 테마](#색상-테마)
 - [개발 가이드](#개발-가이드)
+- [배포 가이드](#배포-가이드)
+- [문서 목록](#문서-목록)
 
 ## 🎯 소개
 
@@ -400,6 +402,96 @@ UI Re-render
 - [ ] 다국어 지원
 - [ ] 백엔드 연동 (Firebase/Supabase)
 - [ ] 친구 초대 및 챌린지
+
+---
+
+## 📦 배포 가이드
+
+### Android 배포
+
+Health App을 Google Play Store에 배포하려면 다음 단계를 따르세요:
+
+#### 1. 필수 준비물
+- Google Play Developer 계정 ($25 USD, 1회 결제)
+- Expo 계정 (무료)
+- Node.js v18 이상
+
+#### 2. 빠른 시작
+```bash
+# EAS CLI 설치
+npm install -g eas-cli
+
+# 로그인
+eas login
+
+# 프로덕션 빌드
+npm run build:android
+
+# Play Store 제출 (자동화 설정 후)
+npm run submit:android
+```
+
+#### 3. 상세 가이드
+모든 배포 단계에 대한 자세한 내용은 [DEPLOYMENT.md](./DEPLOYMENT.md)를 참조하세요.
+
+### 주요 설정 파일
+- **app.json**: 앱 기본 설정 (package, versionCode)
+- **eas.json**: 빌드 프로필 설정
+- **PRIVACY_POLICY.md**: Play Store 필수 개인정보 처리방침
+
+---
+
+## 📚 문서 목록
+
+### 개발 문서
+- **[README.md](./README.md)** - 프로젝트 개요 및 시작 가이드 (현재 문서)
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - 기여 가이드 및 코딩 컨벤션
+- **[CHANGELOG.md](./CHANGELOG.md)** - 버전별 변경 이력
+
+### 배포 문서
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - 📦 **Android 배포 완전 가이드**
+  - EAS 설정 및 빌드 방법
+  - Play Console 설정 단계
+  - 자동화 설정 가이드
+  - 업데이트 배포 전략
+  - 문제 해결 팁
+
+- **[PLAY_STORE_LISTING.md](./PLAY_STORE_LISTING.md)** - 🏪 **Play Store 등록 정보**
+  - 앱 설명 (한국어/영어)
+  - 그래픽 자산 요구사항
+  - 콘텐츠 등급 정보
+  - 데이터 안전성 섹션
+  - 체크리스트
+
+- **[PRIVACY_POLICY.md](./PRIVACY_POLICY.md)** - 🔒 **개인정보 처리방침**
+  - 한국어/영어 버전
+  - Play Store 필수 문서
+  - 데이터 수집 및 사용 정책
+
+### 문서 사용 가이드
+
+#### 개발자용
+1. 프로젝트 시작: **README.md** (현재 문서)
+2. 코드 기여: **CONTRIBUTING.md**
+3. 변경 이력: **CHANGELOG.md**
+
+#### 배포 담당자용
+1. 배포 준비: **DEPLOYMENT.md** (필수!)
+2. 스토어 정보: **PLAY_STORE_LISTING.md**
+3. 개인정보방침 호스팅: **PRIVACY_POLICY.md**
+
+#### 배포 체크리스트
+- [ ] [DEPLOYMENT.md](./DEPLOYMENT.md) 읽기
+- [ ] Google Play Developer 계정 생성
+- [ ] EAS CLI 설치 및 로그인
+- [ ] `app.json`의 `android.package` 고유 이름으로 변경
+- [ ] [PRIVACY_POLICY.md](./PRIVACY_POLICY.md) 웹 호스팅
+- [ ] [PLAY_STORE_LISTING.md](./PLAY_STORE_LISTING.md) 정보로 Play Console 작성
+- [ ] 스크린샷 4-8개 준비 (1080x1920)
+- [ ] 피처 그래픽 생성 (1024x500)
+- [ ] 첫 빌드 및 업로드
+
+---
 
 ## 📝 라이선스
 

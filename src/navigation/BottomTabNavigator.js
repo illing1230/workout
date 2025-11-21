@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/tabs/HomeScreen';
 import LibraryScreen from '../screens/tabs/LibraryScreen';
@@ -6,20 +7,19 @@ import ProgramScreen from '../screens/tabs/ProgramScreen';
 import WorkoutScreen from '../screens/tabs/WorkoutScreen';
 import ChatScreen from '../screens/tabs/ChatScreen';
 import { colors } from '../constants/theme';
+import { HomeIcon, DumbbellIcon, ProgramIcon, CalendarIcon, ChatIcon } from '../components/Icons';
 
 const Tab = createBottomTabNavigator();
 
-const TabIcon = ({ icon, color }) => {
+const TabIcon = ({ IconComponent, color }) => {
   const isActive = color === colors.primary;
   return (
-    <div style={{
-      fontSize: 24,
-      opacity: isActive ? 1 : 0.5,
-      transform: isActive ? 'scale(1.1)' : 'scale(1)',
-      transition: 'all 0.2s ease',
+    <View style={{
+      opacity: isActive ? 1 : 0.6,
+      transform: [{ scale: isActive ? 1.1 : 1 }],
     }}>
-      {icon}
-    </div>
+      <IconComponent size={24} color={color} />
+    </View>
   );
 };
 
@@ -50,7 +50,7 @@ export default function BottomTabNavigator() {
         options={{
           tabBarLabel: '홈',
           tabBarIcon: ({ color }) => (
-            <TabIcon icon="🏠" color={color} />
+            <TabIcon IconComponent={HomeIcon} color={color} />
           ),
         }}
       />
@@ -60,7 +60,7 @@ export default function BottomTabNavigator() {
         options={{
           tabBarLabel: '운동',
           tabBarIcon: ({ color }) => (
-            <TabIcon icon="💪" color={color} />
+            <TabIcon IconComponent={DumbbellIcon} color={color} />
           ),
         }}
       />
@@ -70,7 +70,7 @@ export default function BottomTabNavigator() {
         options={{
           tabBarLabel: '프로그램',
           tabBarIcon: ({ color }) => (
-            <TabIcon icon="📋" color={color} />
+            <TabIcon IconComponent={ProgramIcon} color={color} />
           ),
         }}
       />
@@ -80,7 +80,7 @@ export default function BottomTabNavigator() {
         options={{
           tabBarLabel: '기록',
           tabBarIcon: ({ color }) => (
-            <TabIcon icon="📅" color={color} />
+            <TabIcon IconComponent={CalendarIcon} color={color} />
           ),
         }}
       />
@@ -90,7 +90,7 @@ export default function BottomTabNavigator() {
         options={{
           tabBarLabel: 'AI 챗',
           tabBarIcon: ({ color }) => (
-            <TabIcon icon="💬" color={color} />
+            <TabIcon IconComponent={ChatIcon} color={color} />
           ),
         }}
       />
