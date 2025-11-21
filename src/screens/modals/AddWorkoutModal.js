@@ -11,15 +11,17 @@ import {
 } from 'react-native';
 import LinearGradient from '../../components/LinearGradient';
 import { colors, gradients, spacing, borderRadius, shadows, typography } from '../../constants/theme';
+import { EXERCISE_LIBRARY } from '../../data/exerciseLibrary';
 
+// 주요 운동만 선택 (모달에서 보여줄 운동 목록)
 const WORKOUT_TYPES = [
-  { name: '런닝', icon: '🏃', caloriesPerMin: 10 },
-  { name: '웨이트', icon: '🏋️', caloriesPerMin: 7 },
-  { name: '요가', icon: '🧘', caloriesPerMin: 4 },
-  { name: '사이클', icon: '🚴', caloriesPerMin: 8 },
-  { name: '수영', icon: '🏊', caloriesPerMin: 9 },
-  { name: '기타', icon: '💪', caloriesPerMin: 5 },
-];
+  EXERCISE_LIBRARY.find(ex => ex.name === '런닝'),
+  EXERCISE_LIBRARY.find(ex => ex.name === '사이클'),
+  EXERCISE_LIBRARY.find(ex => ex.name === '요가'),
+  EXERCISE_LIBRARY.find(ex => ex.name === '벤치프레스'),
+  EXERCISE_LIBRARY.find(ex => ex.name === '스쿼트'),
+  EXERCISE_LIBRARY.find(ex => ex.name === '플랭크'),
+].filter(Boolean);
 
 export default function AddWorkoutModal({ visible, onClose, onAdd, selectedDate }) {
   const [workoutType, setWorkoutType] = useState('');
@@ -42,7 +44,7 @@ export default function AddWorkoutModal({ visible, onClose, onAdd, selectedDate 
 
     const workout = {
       type: workoutType,
-      icon: selectedWorkout.icon,
+      iconComponent: selectedWorkout.iconComponent,
       duration: parseInt(duration),
       calories,
       notes,
@@ -103,7 +105,12 @@ export default function AddWorkoutModal({ visible, onClose, onAdd, selectedDate 
                   onPress={() => setWorkoutType(workout.name)}
                   activeOpacity={0.7}
                 >
-                  <Text style={styles.workoutIcon}>{workout.icon}</Text>
+                  <View style={styles.workoutIconContainer}>
+                    <workout.iconComponent
+                      size={36}
+                      color={workoutType === workout.name ? colors.primary : colors.textSecondary}
+                    />
+                  </View>
                   <Text
                     style={[
                       styles.workoutTypeName,
@@ -250,9 +257,10 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     ...shadows.md,
   },
-  workoutIcon: {
-    fontSize: 36,
+  workoutIconContainer: {
     marginBottom: spacing.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   workoutTypeName: {
     fontSize: 14,

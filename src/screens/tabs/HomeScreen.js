@@ -32,8 +32,8 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <LinearGradient colors={gradients.primary} style={styles.header}>
-        <Text style={styles.greeting}>안녕하세요 👋</Text>
-        <Text style={styles.title}>오늘도 화이팅!</Text>
+        <Text style={styles.greeting}>┌ AI Fitness Labs ┓</Text>
+        <Text style={styles.title}>AI와 함께하는 건강한 운동을 시작하세요.</Text>
       </LinearGradient>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
