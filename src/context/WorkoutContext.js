@@ -1,5 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { supabase } from '../lib/supabase';
+import { useAuth } from './AuthContext';
 
 const WorkoutContext = createContext();
 
@@ -12,6 +14,7 @@ export const useWorkout = () => {
 };
 
 export const WorkoutProvider = ({ children }) => {
+  const { user } = useAuth();
   const [workouts, setWorkouts] = useState({});
   const [goals, setGoals] = useState({
     dailyWorkouts: 1,
@@ -19,13 +22,34 @@ export const WorkoutProvider = ({ children }) => {
     dailyCalories: 300,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
 
-  // Load data from AsyncStorage
+  // Load data - 로그인 상태에 따라 Supabase 또는 AsyncStorage에서 로드
   useEffect(() => {
     loadData();
-  }, []);
+  }, [user]);
 
   const loadData = async () => {
+    setIsLoading(true);
+    try {
+      if (user) {
+        // 로그인된 경우: Supabase에서 데이터 로드
+        await loadFromSupabase();
+      } else {
+        // 비로그인 상태: AsyncStorage에서 로드
+        await loadFromAsyncStorage();
+      }
+    } catch (error) {
+      console.error('Error loading data:', error);
+      // Supabase 실패 시 AsyncStorage에서 로드 시도
+      await loadFromAsyncStorage();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // AsyncStorage에서 데이터 로드
+  const loadFromAsyncStorage = async () => {
     try {
       const workoutsData = await AsyncStorage.getItem('workouts');
       const goalsData = await AsyncStorage.getItem('goals');
@@ -37,19 +61,69 @@ export const WorkoutProvider = ({ children }) => {
         setGoals(JSON.parse(goalsData));
       }
     } catch (error) {
-      console.error('Error loading data:', error);
-    } finally {
-      setIsLoading(false);
+      console.error('Error loading from AsyncStorage:', error);
     }
   };
 
-  // Save workouts to AsyncStorage
-  const saveWorkouts = async (newWorkouts) => {
+  // Supabase에서 데이터 로드
+  const loadFromSupabase = async () => {
+    try {
+      // 목표 로드
+      const { data: goalsData, error: goalsError } = await supabase
+        .from('goals')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (!goalsError && goalsData) {
+        setGoals({
+          dailyWorkouts: goalsData.daily_workouts,
+          dailyMinutes: goalsData.daily_minutes,
+          dailyCalories: goalsData.daily_calories,
+        });
+      }
+
+      // 운동 기록 로드
+      const { data: workoutsData, error: workoutsError } = await supabase
+        .from('workouts')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('workout_date', { ascending: false });
+
+      if (!workoutsError && workoutsData) {
+        // Supabase 데이터를 로컬 형식으로 변환
+        const formattedWorkouts = {};
+        workoutsData.forEach(workout => {
+          const date = workout.workout_date;
+          if (!formattedWorkouts[date]) {
+            formattedWorkouts[date] = [];
+          }
+          formattedWorkouts[date].push({
+            id: workout.id,
+            type: workout.workout_type,
+            duration: workout.duration,
+            calories: workout.calories,
+            notes: workout.notes,
+            timestamp: workout.created_at,
+          });
+        });
+        setWorkouts(formattedWorkouts);
+      }
+    } catch (error) {
+      console.error('Error loading from Supabase:', error);
+      throw error;
+    }
+  };
+
+  // AsyncStorage에 저장
+  const saveToAsyncStorage = async (newWorkouts, newGoals = null) => {
     try {
       await AsyncStorage.setItem('workouts', JSON.stringify(newWorkouts));
-      setWorkouts(newWorkouts);
+      if (newGoals) {
+        await AsyncStorage.setItem('goals', JSON.stringify(newGoals));
+      }
     } catch (error) {
-      console.error('Error saving workouts:', error);
+      console.error('Error saving to AsyncStorage:', error);
     }
   };
 
@@ -67,7 +141,30 @@ export const WorkoutProvider = ({ children }) => {
       [date]: [...dateWorkouts, newWorkout],
     };
 
-    await saveWorkouts(updatedWorkouts);
+    setWorkouts(updatedWorkouts);
+    await saveToAsyncStorage(updatedWorkouts);
+
+    // Supabase에 동기화 (로그인 상태인 경우)
+    if (user) {
+      try {
+        setIsSyncing(true);
+        const { error } = await supabase.from('workouts').insert({
+          id: newWorkout.id,
+          user_id: user.id,
+          workout_date: date,
+          workout_type: newWorkout.type,
+          duration: newWorkout.duration,
+          calories: newWorkout.calories,
+          notes: newWorkout.notes || null,
+        });
+
+        if (error) throw error;
+      } catch (error) {
+        console.error('Error syncing workout to Supabase:', error);
+      } finally {
+        setIsSyncing(false);
+      }
+    }
   };
 
   // Update a workout
@@ -82,7 +179,31 @@ export const WorkoutProvider = ({ children }) => {
       [date]: updatedDateWorkouts,
     };
 
-    await saveWorkouts(updatedWorkouts);
+    setWorkouts(updatedWorkouts);
+    await saveToAsyncStorage(updatedWorkouts);
+
+    // Supabase에 동기화 (로그인 상태인 경우)
+    if (user) {
+      try {
+        setIsSyncing(true);
+        const { error } = await supabase
+          .from('workouts')
+          .update({
+            workout_type: updatedWorkout.type,
+            duration: updatedWorkout.duration,
+            calories: updatedWorkout.calories,
+            notes: updatedWorkout.notes || null,
+          })
+          .eq('id', workoutId)
+          .eq('user_id', user.id);
+
+        if (error) throw error;
+      } catch (error) {
+        console.error('Error updating workout in Supabase:', error);
+      } finally {
+        setIsSyncing(false);
+      }
+    }
   };
 
   // Delete a workout
@@ -97,16 +218,52 @@ export const WorkoutProvider = ({ children }) => {
       updatedWorkouts[date] = updatedDateWorkouts;
     }
 
-    await saveWorkouts(updatedWorkouts);
+    setWorkouts(updatedWorkouts);
+    await saveToAsyncStorage(updatedWorkouts);
+
+    // Supabase에서 삭제 (로그인 상태인 경우)
+    if (user) {
+      try {
+        setIsSyncing(true);
+        const { error } = await supabase
+          .from('workouts')
+          .delete()
+          .eq('id', workoutId)
+          .eq('user_id', user.id);
+
+        if (error) throw error;
+      } catch (error) {
+        console.error('Error deleting workout from Supabase:', error);
+      } finally {
+        setIsSyncing(false);
+      }
+    }
   };
 
   // Update goals
   const updateGoals = async (newGoals) => {
-    try {
-      await AsyncStorage.setItem('goals', JSON.stringify(newGoals));
-      setGoals(newGoals);
-    } catch (error) {
-      console.error('Error updating goals:', error);
+    setGoals(newGoals);
+    await saveToAsyncStorage(workouts, newGoals);
+
+    // Supabase에 동기화 (로그인 상태인 경우)
+    if (user) {
+      try {
+        setIsSyncing(true);
+        const { error } = await supabase
+          .from('goals')
+          .update({
+            daily_workouts: newGoals.dailyWorkouts,
+            daily_minutes: newGoals.dailyMinutes,
+            daily_calories: newGoals.dailyCalories,
+          })
+          .eq('user_id', user.id);
+
+        if (error) throw error;
+      } catch (error) {
+        console.error('Error updating goals in Supabase:', error);
+      } finally {
+        setIsSyncing(false);
+      }
     }
   };
 
@@ -168,6 +325,7 @@ export const WorkoutProvider = ({ children }) => {
     workouts,
     goals,
     isLoading,
+    isSyncing,
     addWorkout,
     updateWorkout,
     deleteWorkout,

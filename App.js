@@ -1,16 +1,19 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
+import { AuthProvider } from './src/context/AuthContext';
 import { WorkoutProvider } from './src/context/WorkoutContext';
-import BottomTabNavigator from './src/navigation/BottomTabNavigator';
+import RootNavigator from './src/navigation/RootNavigator';
 
 export default function App() {
   return (
-    <WorkoutProvider>
-      <NavigationContainer>
-        <StatusBar style="light" />
-        <BottomTabNavigator />
-      </NavigationContainer>
-    </WorkoutProvider>
+    <AuthProvider>
+      <WorkoutProvider>
+        <NavigationContainer>
+          <StatusBar style="light" />
+          <RootNavigator />
+        </NavigationContainer>
+      </WorkoutProvider>
+    </AuthProvider>
   );
 }

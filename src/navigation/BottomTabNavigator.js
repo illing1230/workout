@@ -6,8 +6,9 @@ import LibraryScreen from '../screens/tabs/LibraryScreen';
 import ProgramScreen from '../screens/tabs/ProgramScreen';
 import WorkoutScreen from '../screens/tabs/WorkoutScreen';
 import ChatScreen from '../screens/tabs/ChatScreen';
+import ProfileScreen from '../screens/tabs/ProfileScreen';
 import { colors } from '../constants/theme';
-import { HomeIcon, DumbbellIcon, ProgramIcon, CalendarIcon, ChatIcon } from '../components/Icons';
+import { HomeIcon, DumbbellIcon, ProgramIcon, CalendarIcon, ChatIcon, UserIcon } from '../components/Icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -91,6 +92,16 @@ export default function BottomTabNavigator() {
           tabBarLabel: 'AI 챗',
           tabBarIcon: ({ color }) => (
             <TabIcon IconComponent={ChatIcon} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarLabel: '프로필',
+          tabBarIcon: ({ color }) => (
+            <TabIcon IconComponent={UserIcon} color={color} />
           ),
         }}
       />

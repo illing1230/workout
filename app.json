@@ -36,6 +36,8 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
+      "supabaseUrl": "https://yumrbyklzsndxzvrwsxh.supabase.co",
+      "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl1bXJieWtsenNuZHh6dnJ3c3hoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2OTQ5NjIsImV4cCI6MjA3OTI3MDk2Mn0.mRRThj8nngCEIMGK_TNFVaI4N9tn3aOD-tZF0mTLKpI",
       "eas": {
         "projectId": "your-project-id-here"
       }
